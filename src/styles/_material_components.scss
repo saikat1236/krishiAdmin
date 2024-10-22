@@ -1,0 +1,30 @@
+mat-form-field {
+  width: 100%;
+}
+
+::ng-deep .mat-app-background {
+  background-color: initial !important;
+}
+
+mat-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+mat-icon {
+  color: #3f51b5;
+}
+
+table {
+  width: 100%;
+}
+
+th mat-header-cell {
+  font-weight: bold;
+}
+
+
+mat-progress-spinner {
+  color: #198719;
+}

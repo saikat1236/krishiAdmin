@@ -1,0 +1,38 @@
+<notifier-container></notifier-container>
+<mat-spinner style="left: 50%;top: 50%; z-index: 8888;" *ngIf="isLoading" class="example-margin" [color]="color" [value]="value"></mat-spinner>
+<div class="login-container" style="background-image: url(../../../assets/images/krishi_background.jpg); height: 91vh; background-repeat: no-repeat; background-size: cover;">
+  <mat-card class="login-card">
+    <div class="login-left">
+      <img class="border-round border-opacity-100 logo" src="../../../assets/images/krishi_img.jpeg" alt="krishi_Admin">
+      <h2>Welcome Back!</h2>
+      <p>Log in to your account to continue.</p>
+    </div>
+    <div class="login-right">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput aria-label="E-mail" type="email" formControlName="email" placeholder="Enter your email">
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Password</mat-label>
+          <input matInput aria-label="Password"  [type]="passwordFieldType" formControlName="password" placeholder="Enter your password">
+          <button mat-icon-button matSuffix type="button" (click)="togglePasswordVisibility()" class="toggle-button">
+            <mat-icon>{{ passwordFieldType === 'password' ? 'visibility' : 'visibility_off' }}</mat-icon>
+          </button>
+        </mat-form-field>
+        <button color="success" class="w-100 btn btn-outline-success">Login</button>
+         <!-- <strong class="mT-5 pos-center">
+          OR
+         </strong>
+         <button class="signUp mT-10">Create an Account ?
+         <strong class="signUp__pos" [matTooltip]="'SignUp'" (click)="navigateOpen()" (keypress)="navigateOpen()">
+          SignUp
+         </strong>
+         </button> -->
+      </form>
+    </div>
+  </mat-card>
+</div>
+
+
+

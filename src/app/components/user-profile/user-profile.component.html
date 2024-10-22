@@ -1,0 +1,212 @@
+<notifier-container></notifier-container>
+<div *ngIf="isLoading" class="loader-overlay">
+  <mat-spinner color="warn"></mat-spinner>
+</div>
+<mat-sidenav-container *ngIf="!isLoading" class="sidenav-container">
+  <mat-sidenav #sidenav mode="side" opened class="sidenav">
+    <mat-toolbar color="primary" style="background-color: #198754;
+    color: white;">
+      <mat-icon class="material-symbols-outlined">
+        account_circle
+      </mat-icon> &nbsp;
+      {{userData.name | transform}}
+    </mat-toolbar>
+    <mat-nav-list>
+      <a mat-list-item *ngFor="let link of links" (click)="navigate(link)">
+        <mat-icon style="vertical-align: text-bottom;"
+          matPrefix>{{link.icon}}</mat-icon>&nbsp;
+        <span matLine>{{link.name}}</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar color="primary" style="background-color: #198754;
+    color: white;" click>
+      <button mat-icon-button (click)="sidenav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span>Profile</span>
+      <span class="pointer dis-content">
+        <mat-icon [matMenuTriggerFor]="belowMenu" matTooltip="User Profile"
+          style="right: 20px; position: absolute;" matSuffix
+          class="material-symbols-outlined">
+          account_circle
+        </mat-icon>
+
+        <mat-menu #belowMenu="matMenu" yPosition="below">
+          <span mat-menu-item matTooltip="Role">{{this.userData.role}}
+            <mat-icon matSuffix>badge</mat-icon>
+          </span>
+
+          <span mat-menu-item (click)="editProfile()"
+          (keypress)="editProfile()"
+            matTooltip="Change Password">
+            <span>Change Password</span>
+            <mat-icon matSuffix>password</mat-icon>
+          </span>
+
+          <button routerLink="/krishi-admin" routerLinkActive="true"
+            (click)="navigate('logout')" mat-menu-item>Logout
+            <mat-icon matSuffix>logout</mat-icon>
+          </button>
+        </mat-menu>
+      </span>
+    </mat-toolbar>
+
+    <div class="content">
+      <mat-card class="welcome-card">
+        <mat-card-header>
+          <mat-card-title>
+            <h1>Users List</h1>
+
+            <span *ngIf="isVisible()">
+              <button mat-icon-button color="primary" class="add_product"
+                (click)="addProduct()"
+                matTooltip="Add Product">
+                <mat-icon style="vertical-align: middle;
+            top: -8px;
+            position: relative;
+            right: 3px;">add_circle</mat-icon>
+              </button>
+            </span>
+            <div class="search-container">
+              <div class="search-container">
+                <div class="search-box">
+                  <button class="search-button">
+                    <mat-icon>search</mat-icon>
+                  </button>
+                  <input (keyup)="applyFilter($event)" matInput
+                    autocomplete="off" aria-label="search"
+                    placeholder="Search..." [(ngModel)]="searchQuery"
+                    class="search-input">
+                  <button *ngIf="isSearchData" class="search-button"
+                    (click)="clearSearch()">
+                    <mat-icon matSuffix>clear</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </mat-card-title>
+        </mat-card-header>
+
+        <div class="page-pos mT-50">
+          <mat-form-field [floatLabel]="'always'" appearance="outline"
+            class="page-limit-pos">
+            <mat-label>Page Limit</mat-label>
+            <mat-select [(value)]="originalPageLimit">
+              <mat-option *ngFor="let option of pageOptionSize"
+                (keypress)="selectPageNumber(option)"
+                (click)="selectPageNumber(option)" [value]="option">
+                {{ option }}
+              </mat-option>
+            </mat-select>
+            <mat-icon matSuffix>format_list_numbered</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field class="page-limit-pos mL-10" [floatLabel]="'always'"
+            appearance="outline">
+            <mat-label>Page Number</mat-label>
+            <input matInput min="1" (ngModelChange)="changePageLimit($event)"
+              type="number" [(ngModel)]="selectPage" aria-label="type"
+              placeholder="Type">
+            <mat-icon matSuffix>format_list_numbered</mat-icon>
+          </mat-form-field>
+
+          <button color="success" mat-dialog-close
+            class="btn btn-success find-btn-pos mL-10"
+            (click)="listFind()">Find</button>
+        </div>
+
+        <mat-card-content>
+          <div class="example-container mat-elevation-z8">
+            <table mat-table matTableResponsive [dataSource]="dataSource"
+              matSort
+              multiTemplateDataRows matSort
+              (matSortChange)="sortChange($event)">
+
+              <!-- <ng-container matColumnDef="_id">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> User Id
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element._id}}
+                </td>
+              </ng-container> -->
+
+              <ng-container matColumnDef="userName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  <strong>
+                    Name
+                  </strong>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.userName}}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  <strong>
+                    Email
+                  </strong>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="role">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  <strong>
+                    Role
+                  </strong>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{element.role}}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef
+                  mat-sort-header>
+                  <strong>Status</strong>
+                </th>
+
+                <td mat-cell *matCellDef="let element">
+                  {{element.status}}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <th [disabled]="isSortingDisabled('action')" mat-header-cell
+                  *matHeaderCellDef mat-sort-header>
+                  <strong>
+                    Action
+                  </strong>
+                </th>
+                <td mat-cell *matCellDef="let element; let i = index">
+                  <span *ngIf="element.status === 'active'" class="pointer" style="background-color: white;">
+
+                    <span *ngIf="isVisible()" class="pointer" style="background-color: white;">
+                      <mat-icon (click)="updateUser(element)"
+                        (keypress)="updateUser(element)"
+                        style="color: #198754;"
+                        matTooltip="Update User">
+                        edit_square
+                      </mat-icon>
+                    </span>
+
+                    <mat-icon *ngIf="isVisible()" (click)="removeUser(element)"
+                      (keypress)="removeUser(element)"
+                      style="color: red" matTooltip="Delete">
+                      delete
+                    </mat-icon>
+                  </span>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

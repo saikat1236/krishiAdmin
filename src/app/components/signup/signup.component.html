@@ -1,0 +1,43 @@
+<notifier-container></notifier-container>
+<div class="signup-container" style="background-image: url(../../../assets/images/krishi_background.jpg); height: 91vh; background-repeat: no-repeat; background-size: cover;">
+  <mat-card class="signup-card">
+    <div class="signup-content">
+      <div class="signup-info">
+        <img style="border-radius: 100px !important" src="../../assets/images/krishi_img.png.webp" alt="krishi_Admin" class="logo">
+        <h2>Welcome!</h2>
+        <p>Create your account by filling out the form.</p>
+      </div>
+      <div class="signup-form">
+        <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+          <mat-form-field appearance="outline">
+            <mat-label>Full Name</mat-label>
+            <input matInput aria-label="name" formControlName="userName" placeholder="Enter your full name">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput aria-label="email" formControlName="email" placeholder="Enter your email">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Role</mat-label>
+            <mat-select formControlName="role">
+              <mat-option *ngFor="let user of roleOption" [value]="user.role">
+                {{user.viewValue}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input matInput minlength="8" aria-label="password" type="password" formControlName="password" placeholder="Enter your password">
+          </mat-form-field>
+
+          <button color="success" type="submit" class="w-100 btn btn-outline-success">SignUp</button>
+          <button class="login mT-15">Already have account ? <strong [matTooltip]="'Login'" (click)="navigateOpen()" (keypress)="navigateOpen()"
+            class="login__pos" >Login</strong>
+          </button>
+        </form>
+      </div>
+    </div>
+  </mat-card>
+</div>

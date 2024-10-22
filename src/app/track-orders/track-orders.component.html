@@ -1,0 +1,31 @@
+<notifier-container></notifier-container>
+<mat-card class="dialog-card">
+  <mat-card-header style="justify-content: center;">
+    <mat-card-title class="dialog-title">Change Order Status To
+      <div class="status-pos" *ngIf="data.status === 'outForDelivery'">
+        {{'Delivered'}}
+      </div>
+      <div class="status-pos" *ngIf="data.status === 'placed'">
+        {{'Shipped'}}
+      </div>
+      <div class="status-pos" *ngIf="data.status === 'shipped'">
+        {{'Out For Delivery'}}
+      </div>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="trackOrderStatus" class="dialog-form" (ngSubmit)="onSubmit()">
+      <div *ngIf="isLoading" class="loader-overlay">
+        <mat-spinner color="warn"></mat-spinner>
+      </div>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Remarks</mat-label>
+        <input matInput placeholder="remarks" formControlName="remarks" type="text" aria-label="remarks">
+      </mat-form-field>
+    </form>
+  </mat-card-content>
+  <mat-card-actions>
+    <button color="success" mat-dialog-close class="btn btn-outline-success">Cancel</button>
+    <button color="success" class="btn btn-success mL-10" (click)="onSubmit()">Submit</button>
+  </mat-card-actions>
+</mat-card>

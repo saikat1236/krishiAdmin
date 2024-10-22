@@ -1,0 +1,67 @@
+<notifier-container></notifier-container>
+<mat-spinner style="left: 50%;top: 50%; z-index: 8888;" *ngIf="isLoading" class="example-margin"
+[color]="color" [value]="value"></mat-spinner>
+<nav class="navbar navbar-expand-lg navbar-light" style="background: white;">
+  <img style="border-radius: 100px;vertical-align: middle; opacity: 1;" src="../../assets/images/krishi_img.jpeg" width="50px" height="50px" alt="krishi_img">&nbsp;
+  <a style="font-variant-caps: petite-caps;" class="navbar-brand" href="#">{{'KRISHI_MANDI' | translate}}</a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav"
+    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+      <li class="nav-item active">
+        <a class="nav-link pointer" (click)="navigate('home')" (keypress)="navigate('home')" routerLinkActive="true">Home</a>
+      </li>
+
+      <li class="nav-item active">
+        <a *ngIf="checkUrl()" class="nav-link pointer" (click)="navigate('order')" (keypress)="navigate('order')" routerLinkActive="true">Order</a>
+      </li>
+
+      <li class="nav-item active">
+        <a *ngIf="checkUrl()" class="nav-link pointer" (click)="navigate('product')" (keypress)="navigate('product')" routerLinkActive="true">Product</a>
+      </li>
+
+      <!-- <li class="nav-item dropdown">
+        <span>
+          <mat-icon class="mT-5" style="vertical-align: -webkit-baseline-middle;">language</mat-icon>
+        </span>
+      </li> -->
+      <!-- <li class="nav-item dropdown mL-5">
+        <select #item [(ngModel)]="selectedItem" (change)="langChangeModel(item.value)" class="form-select"
+          aria-label="Default select example">
+          <option selected>English</option>
+          <option value="fr">French</option>
+          <option value="es">Spanish</option>
+          <option value="de">German</option>
+        </select>
+      </li> -->
+    </ul>
+  </div>
+</nav>
+<div *ngIf="viewMode">
+  <div class="bg-video">
+    <img  class="bg-video__content" src="../../assets/images/krishi_background.jpg" alt="farmer_img"/>
+  </div>
+
+  <mat-card class="welcome-card">
+    <mat-card-header>
+      <div mat-card-avatar class="welcome-card-avatar"></div>
+      <mat-card-title>Welcome to Our Site!</mat-card-title>
+      <mat-card-subtitle class="mT-10">We're glad to have you here</mat-card-subtitle>
+    </mat-card-header>
+    <img mat-card-image style="padding: 10px;
+    border-radius: 50px;" src="../../assets/images/welcome.png" alt="Welcome">
+    <mat-card-content>
+      <p>
+        Explore our site to find amazing content and resources tailored just for you.
+      </p>
+    </mat-card-content>
+    <mat-card-actions class="pos-center">
+      <button color="success" class="w-100 btn btn-success" (click)="navigateToLogin()">Get Started &rarr;</button>
+    </mat-card-actions>
+  </mat-card>
+
+</div>
+<router-outlet></router-outlet>

@@ -1,0 +1,37 @@
+<notifier-container></notifier-container>
+<mat-card class="dialog-card">
+  <div *ngIf="isLoading" class="loader-overlay">
+    <mat-spinner color="warn"></mat-spinner>
+ </div>
+  <mat-card-header style="justify-content: center;">
+    <mat-card-title class="dialog-title">Update Profile
+      <mat-divider style="border: 1px solid;" ></mat-divider>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="updateForm" class="dialog-form" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="outline" class="full-width">
+
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="userName" placeholder="Old Password"
+        aria-label="userName">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" placeholder="Email..."
+        aria-label="email">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Role</mat-label>
+        <input matInput formControlName="role" placeholder="Role"
+        aria-label="Role">
+      </mat-form-field>
+    </form>
+  </mat-card-content>
+  <mat-card-actions style="justify-content: flex-end;">
+    <button color="success" mat-dialog-close class="btn btn-outline-success">Cancel</button>
+    <button color="success" class="btn btn-success mL-10" (click)="onSubmit()">Submit</button>
+  </mat-card-actions>
+</mat-card>

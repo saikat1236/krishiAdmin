@@ -1,0 +1,235 @@
+<notifier-container></notifier-container>
+<div *ngIf="isLoading" class="loader-overlay">
+  <mat-spinner color="warn"></mat-spinner>
+</div>
+
+<mat-sidenav-container *ngIf="!isLoading" class="sidenav-container">
+  <mat-sidenav #sidenav mode="side" opened class="sidenav">
+    <mat-toolbar color="primary" style="background-color: #198754;
+    color: white;" class="toolbar-col">
+      <mat-icon class="material-symbols-outlined">
+        account_circle
+      </mat-icon> &nbsp;
+      {{userData.name | transform}}
+    </mat-toolbar>
+    <mat-nav-list>
+      <a mat-list-item *ngFor="let link of links"
+        (click)="redirectsPage(link.name)">
+        <mat-icon style="vertical-align: text-bottom;"
+          matPrefix>{{link.icon}}</mat-icon>&nbsp;
+        <span matLine>{{link.name}}</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar class="toolbar-col" style="background-color: #198754;
+    color: white;" click>
+      <button mat-icon-button (click)="sidenav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span>Product Dashboard</span>
+
+      <span class="pointer dis-content">
+        <mat-icon [matMenuTriggerFor]="belowMenu" matTooltip="User Profile"
+          style="right: 20px; position: absolute;" matSuffix
+          class="material-symbols-outlined">
+          account_circle
+        </mat-icon>
+
+        <mat-menu #belowMenu="matMenu" yPosition="below">
+          <span mat-menu-item matTooltip="Role">{{userData.role}}
+            <mat-icon matSuffix>badge</mat-icon>
+          </span>
+
+          <span mat-menu-item (click)="editProfile()"
+          (keypress)="editProfile()"
+            matTooltip="Change Password">
+            <span>Change Password</span>
+            <mat-icon matSuffix>password</mat-icon>
+          </span>
+
+          <button routerLink="/krishi-admin" routerLinkActive="true"
+            (click)="navigate('logout')"  matTooltip="Logout" mat-menu-item>Logout
+            <mat-icon matSuffix>logout</mat-icon>
+          </button>
+        </mat-menu>
+      </span>
+    </mat-toolbar>
+    <div class="content">
+      <mat-card class="welcome-card h-100">
+        <mat-card-header>
+          <mat-card-title>
+            <h1>Products List</h1>
+            <div class="search-container">
+              <div class="search-container">
+                <div class="search-box">
+                  <button class="search-button">
+                    <mat-icon>search</mat-icon>
+                  </button>
+                  <input (keyup)="applyFilter($event)" matInput
+                    autocomplete="off" aria-label="search"
+                    placeholder="Search..."
+                    [(ngModel)]="searchQuery" class="search-input">
+
+                  <button *ngIf="isSearchData" class="search-button"
+                    (click)="clearSearch()">
+                    <mat-icon matSuffix>clear</mat-icon>
+                  </button>
+                </div>
+                <span style="float: inline-end;
+                right: 10px;
+                background: forestgreen;
+                color: white;
+                margin-top: -135px;
+                position: absolute;
+                outline: none;
+                border-radius: 100px;">
+                  <button style="color: white;" mat-icon-button color="primary" (click)="addProduct()"
+                    matTooltip="Add Product">
+                    <mat-icon class="add_circle">add_circle</mat-icon>
+                  </button>
+                </span>
+
+              <span class="category-select">
+                <mat-form-field appearance="outline">
+                  <mat-label>Choose a category</mat-label>
+                  <mat-select #mySelect multiple [(value)]="selectedOption" (selectionChange)="selectionChange()">
+                    <mat-option *ngFor="let option of options"
+                      [value]="option">{{option}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-icon matSuffix>shopping_basket</mat-icon>
+                </mat-form-field>
+              </span>
+              </div>
+            </div>
+
+            <div class="pagination-pos" >
+              <mat-form-field [floatLabel]="'always'" appearance="outline" class="page-limit-pos">
+              <mat-label>Page Limit</mat-label>
+              <mat-select [(value)]="originalPageLimit">
+                  <mat-option *ngFor="let option of pageOptionSize" (keypress)="selectPageNumber(option)"
+                    (click)="selectPageNumber(option)" [value]="option">
+                    {{ option }}
+                  </mat-option>
+                </mat-select>
+                <mat-icon matSuffix>format_list_numbered</mat-icon>
+              </mat-form-field>
+
+              <mat-form-field class="page-limit-pos mL-10" [floatLabel]="'always'" appearance="outline">
+               <mat-label>Page Number</mat-label>
+               <input matInput min="1" (ngModelChange)="changePageLimit($event)" type="number" [(ngModel)]="selectPage" aria-label="type" placeholder="Type">
+               <mat-icon matSuffix>format_list_numbered</mat-icon>
+              </mat-form-field>
+
+              <button color="success" style="top: -15px;
+              position: relative;
+              /* left: 90%; */
+              width: 100px;
+              height: 55px;" mat-dialog-close class="btn btn-success mL-10" (click)="listFind()">Find</button>
+            </div>
+          </mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="example-container mat-elevation-z8 adjust-table">
+            <table matTableResponsive mat-table [dataSource]="dataSource"
+              matSort
+              multiTemplateDataRows matSort
+              (matSortChange)="sortChange($event)">
+
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  <strong>
+                    Name
+                  </strong>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element?.name}}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="about">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  <strong>
+                    About
+                  </strong>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element?.about}}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="pricePerUnit">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  <strong>
+                    Price
+                  </strong>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{element?.pricePerUnit}}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="totalAvailableQuantity">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  <strong>
+                    Avail Quantity
+                  </strong>
+                </th>
+                <td mat-cell style="left: 17px; position: relative;"
+                  *matCellDef="let element">{{element?.totalAvailableQuantity}}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="expireDate">
+                <th class="font-bold" mat-header-cell *matHeaderCellDef
+                  mat-sort-header>
+                  <strong>
+                    Date
+                  </strong>
+                </th>
+                <td mat-cell
+                  *matCellDef="let element">{{element?.expireDate | date:
+                  'medium'}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="minQuantity">
+                <th mat-header-cell *matHeaderCellDef
+                  mat-sort-header>
+                  <strong>
+                    Quantity
+                  </strong>
+                  </th>
+                <td mat-cell
+                  *matCellDef="let element">{{element?.minQuantity}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <th [disabled]="isSortingDisabled('action')" mat-header-cell
+                  *matHeaderCellDef
+                  mat-sort-header>
+                  <strong>
+                    Action
+                  </strong>
+                </th>
+                <td mat-cell
+                  *matCellDef="let element; let i = index">
+                  <span class="pointer" style="background-color: white;">
+                    <mat-icon (click)="viewQuantity(element)"
+                      (keypress)="viewQuantity(element)"
+                      style="color: #198754" matTooltip="View">
+                      visibility
+                    </mat-icon>
+                  </span>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

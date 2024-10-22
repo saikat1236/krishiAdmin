@@ -1,0 +1,98 @@
+
+.h-100{
+  height: 100%;
+}
+
+/* app.component.css */
+
+
+/* New Css */
+.category-select{
+  float: inline-end;
+  position: absolute;
+  right: 10px;
+  margin-top: 20px;
+}
+
+.pagination-pos{
+  display: flex;
+  position: relative;
+  margin-bottom: 20px;
+  top: 40px;
+}
+
+@media screen and (max-width: 999px) {
+
+
+  //New Css
+  .category-select{
+    float: inline-end;
+    position: absolute;
+    left: 20px;
+    max-width: 380px;
+    margin-top: 159px;
+  }
+
+  .h-100{
+    height: 100%;
+  }
+
+  .pagination-pos{
+    display: table-cell;
+    position: relative;
+    top: 120px;
+    margin-bottom: 20px;
+    max-width: 100%;
+    top: 94px;
+  }
+
+  .add {
+    position: relative;
+    float: inline-end !important;
+    right: 20px !important;
+    margin-top: -70px !important;
+    border-radius: 100px !important;
+    width: 44px !important;
+    color: #198754 !important;
+    background: #fff !important;
+    border: 2px solid !important;
+    height: 42px !important;
+  }
+
+  .adjust-table{
+    margin-top: 60px;
+  }
+}
+
+.adjust-table{
+  position: relative;
+  top: 5px;
+}
+
+.add {
+  position: relative;
+  float: inline-end !important;
+  right: 20px !important;
+  top: -210px !important;
+  border-radius: 100px !important;
+  width: 44px !important;
+  color: #198754 !important;
+  background: #fff !important;
+  border: 2px solid !important;
+  height: 42px !important;
+}
+
+.find-btn-pos {
+  top: -15px;
+  position: relative;
+  left: 90%;
+  width: 100px;
+  height: 55px;
+}
+
+.page-limit-pos {
+  width: 135px;
+  top: -15px;
+  position: relative;
+}
+

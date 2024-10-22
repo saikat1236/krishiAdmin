@@ -1,0 +1,45 @@
+<mat-card class="order-details-card">
+  <mat-card-header class="view-details">
+    <mat-card-title>
+      <h2 class="header-text">View Products</h2>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="grid-container">
+      <div class="grid-item label">Name</div>
+      <div class="grid-item value pending">{{viewProduct.applicationData.name}}</div>
+
+      <div class="grid-item label">{{ 'About' }}</div>
+      <div class="grid-item value"> {{viewProduct.applicationData.about}}</div>
+
+      <div class="grid-item label">{{ 'Min Quantity' }}</div>
+      <div class="grid-item value">{{viewProduct.applicationData.minQuantity}}</div>
+
+      <div class="grid-item label">{{ 'Category' }}</div>
+      <div class="grid-item value">{{viewProduct.applicationData.category}}</div>
+
+      <div class="grid-item label">{{ 'Expiry Date' }}</div>
+      <div class="grid-item value">{{viewProduct.applicationData.expireDate}}</div>
+
+      <div class="grid-item label">{{ 'Price' }}</div>
+      <div class="grid-item value">{{viewProduct.applicationData.pricePerUnit | currency: 'INR'}}</div>
+
+      <div class="grid-item label">{{ 'Total Quantity' }}</div>
+      <div class="grid-item value">{{viewProduct.applicationData.totalAvailableQuantity}}</div>
+
+      <div class="grid-item label">{{ 'Available Quantity' }}</div>
+      <div class="grid-item value">{{viewProduct.applicationData.totalAvailableQuantity}}</div>
+    </div>
+
+    <div class="grid-item label mT-10">{{ 'Product Image' }}</div>
+    <div class="grid-item value image-card" *ngFor="let image of viewProduct.applicationData.images">
+      <div style="word-wrap: break-word;">
+        <img [src]="image" alt="upload_img" class="image">{{image.substring(image.lastIndexOf("-")+1)}}
+      </div>
+    </div>
+</mat-card-content>
+
+<div class="margin-15">
+  <button class="view-product-btn" (click)="updateProduct()">Update Product</button>
+</div>
+</mat-card>

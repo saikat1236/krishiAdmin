@@ -1,0 +1,57 @@
+.query-state {
+  width: 100%;
+}
+
+.page-limit-pos {
+  width: 135px;
+  top: -40px;
+  position: relative;
+}
+
+.page-pos {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.find-btn-pos {
+  top: -40px;
+  position: relative;
+  width: 100px;
+  height: 55px;
+}
+
+.query-state{
+  width: 300px;
+  top: -60px;
+  position: relative;
+  left: 15px
+}
+
+.table-pos{
+  position: relative;
+  top: -50px;
+}
+
+@media screen and (max-width: 991px) {
+
+  .search-box{
+    max-width: 100%;
+  }
+
+  .table-pos{
+    position: relative;
+  }
+
+  .query-state{
+    width: 300px;
+    top: 15px;
+    position: relative;
+    max-width: 100%;
+    left: 5px
+  }
+
+  .page-pos {
+    display: flex;
+    margin-top: 50px;
+  }
+}

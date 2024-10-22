@@ -1,0 +1,44 @@
+<notifier-container></notifier-container>
+<mat-card class="dialog-card">
+  <mat-card-header style="justify-content: center;">
+    <mat-card-title class="dialog-title">Add User
+      <mat-divider style="border: 1px solid;" ></mat-divider>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="addUserForm" (ngSubmit)="onSubmit()">
+
+      <div *ngIf="isLoading" class="loader-overlay">
+        <mat-spinner color="warn"></mat-spinner>
+      </div>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Full Name</mat-label>
+        <input matInput aria-label="name" formControlName="userName" placeholder="Enter your full name">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput aria-label="email" formControlName="email" placeholder="Enter your email">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Role</mat-label>
+        <mat-select formControlName="role">
+          <mat-option *ngFor="let user of roleOption" [value]="user.role">
+            {{user.viewValue}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Password</mat-label>
+        <input matInput minlength="8" aria-label="password" type="password" formControlName="password" placeholder="Enter your password">
+      </mat-form-field>
+
+    </form>
+  </mat-card-content>
+  <mat-card-actions style="justify-content: flex-end;">
+    <button color="success" mat-dialog-close class="btn btn-outline-success">Cancel</button>
+    <button color="success" class="btn btn-success mL-10" (click)="onSubmit()">Submit</button>
+  </mat-card-actions>
+</mat-card>

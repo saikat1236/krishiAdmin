@@ -1,0 +1,310 @@
+<notifier-container></notifier-container>
+<mat-card class="dialog-card">
+  <mat-card-header style="justify-content: center">
+    <mat-card-title class="dialog-title"
+      >Add Product
+      <mat-divider style="border: 1px solid"></mat-divider>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="updateProductQuantity" class="dialog-form">
+      <div *ngIf="isLoading" class="loader-overlay">
+        <mat-spinner color="warn"></mat-spinner>
+      </div>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Name</mat-label>
+        <input
+          matInput
+          formControlName="name"
+          placeholder="Name"
+          aria-label="name"
+        />
+      </mat-form-field>
+
+      <!-- <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Category</mat-label>
+        <input
+          matInput
+          formControlName="category"
+          placeholder="Category"
+          aria-label="category"
+        />
+      </mat-form-field> -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Category</mat-label>
+        <mat-select formControlName="category">
+          <mat-option *ngFor="let category of categories" [value]="category.key">
+            {{ category.value }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>      
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Min Quantity</mat-label>
+        <input
+          matInput
+          min="0"
+          type="number"
+          formControlName="minQuantity"
+          placeholder="Min Quantity"
+          aria-label="minQuantity"
+        />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Unit</mat-label>
+        <mat-select formControlName="unit" aria-label="Unit">
+          <mat-option *ngFor="let unit of units" [value]="unit.value">
+            {{ unit.measure }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Total Available Quantity</mat-label>
+        <input
+          matInput
+          min="0"
+          type="number"
+          formControlName="totalAvailableQuantity"
+          placeholder="Total Available Quantity"
+          aria-label="totalAvailableQuantity"
+        />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Total Added Quantity</mat-label>
+        <input
+          matInput
+          min="0"
+          type="number"
+          formControlName="totalAddedQuantity"
+          placeholder="Total Added Quantity"
+          aria-label="totalAddedQuantity"
+        />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Price Per Unit</mat-label>
+        <input
+          matInput
+          formControlName="pricePerUnit"
+          min="0"
+          type="text"
+          placeholder="Price Per Unit"
+          aria-label="pricePerUnit"
+          (keypress)="validateNumber($event)"
+        />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>About</mat-label>
+        <input
+          matInput
+          formControlName="about"
+          placeholder="About"
+          aria-label="about"
+        />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Expire Date</mat-label>
+        <input
+          matInput
+          formControlName="expireDate"
+          placeholder="Expire Date"
+          aria-label="expireDate"
+          [matDatepicker]="picker"
+        />
+        <mat-datepicker-toggle
+          matIconSuffix
+          class="mat-clr"
+          [for]="picker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Discount</mat-label>
+        <input
+          matInput
+          formControlName="discount"
+          placeholder="Discount"
+          aria-label="discount"
+        />
+      </mat-form-field>
+
+      <!-- <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Labels</mat-label>
+        <div formArrayName="labels" class="checkbox-group">
+          <div *ngFor="let label of labels; let i = index">
+            <mat-checkbox 
+              [formControlName]="i" 
+              (change)="onLabelChange(label, $event.checked)"
+              class="custom-checkbox">
+              {{ label.name }}
+            </mat-checkbox>
+          </div>
+        </div>
+      </mat-form-field> -->
+      
+      
+      
+      
+
+      <!-- <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Seller Id</mat-label>
+        <input matInput formControlName="sellerId" placeholder="Seller Id"
+          aria-label="sellerId">
+      </mat-form-field> -->
+
+      <!-- <div formArrayName="discountMatrix" class="discount-matrix-section ">
+        <mat-label class="discount-matrix-section-label"
+          style="font-size: larger; font-weight: 600;">
+          Discount Matrix
+          <button class="pos-rel border-solid align-middle mat-clr"
+            (click)="addDiscount()" matTooltip="Add" mat-icon-button>
+            <mat-icon>add_circle</mat-icon>
+          </button>
+        </mat-label>
+
+        <div *ngFor="let discount of discountMatrix.controls; let i=index"
+          [formGroupName]="i" class="discount-group discount-matrix-container">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Min Kg</mat-label>
+            <input matInput min="0" formControlName="minKg" type="number"
+              aria-label="minKg">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Max Kg</mat-label>
+            <input matInput min="0" formControlName="maxKg" type="number"
+              aria-label="maxKg">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Discount Percentage</mat-label>
+            <input matInput min="0" formControlName="discountPercentage"
+              type="number" aria-label="discountPercentage">
+          </mat-form-field>
+
+          <button class="pos-rel border-solid" matTooltip="Delete"
+            (click)="removeDiscount(i)"
+            *ngIf="discountMatrix.length > 1 && i > 0"
+            mat-icon-button color="warn">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div> -->
+
+      <!-- <div formArrayName="bulkOrderDiscounts" class="mT-50 bulk-discount-section">
+        <mat-label class="discount-section-label" style="position: relative;
+          font-size: larger; font-weight: 600;">
+          BulkOrder Discounts
+          <button class="pos-rel border-solid align-middle mat-clr"
+            (click)="addDiscountBulk()" matTooltip="Add" mat-icon-button>
+            <mat-icon>add_circle</mat-icon>
+          </button>
+        </mat-label>
+        <div *ngFor="let discount of bulkOrderDiscounts.controls; let i=index"
+          [formGroupName]="i" class="discount-group discount-container">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Min Kg</mat-label>
+            <input matInput min="0" formControlName="minKg" type="number"
+              aria-label="minKg">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Max Kg</mat-label>
+            <input matInput min="0" formControlName="maxKg" type="number"
+              aria-label="maxKg">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Discount Percentage</mat-label>
+            <input matInput min="0" formControlName="discountPercentage"
+              type="number" aria-label="discountPercentage">
+          </mat-form-field>
+
+          <button class="pos-rel border-solid" matTooltip="Delete"
+            (click)="removeDiscountBulk(i)"
+            *ngIf="bulkOrderDiscounts.length > 1 && i > 0"
+            mat-icon-button color="warn">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div> -->
+
+<div formArrayName="images" class="full-width mT-20">
+  <mat-label style="font-size: 18px; font-weight: 700">Upload File</mat-label>
+
+  <div *ngIf="images.invalid && images.touched" class="error-message">
+    Please upload at least one image.
+  </div>
+
+  <div>
+    <label class="btn btn-default pad-0" style="margin: 0px">
+      <button
+        mat-button
+        class="choose-file-1 mB-10 file-upload"
+        (click)="fileInput.click()"
+        tabindex="0"
+      >
+        Choose File
+      </button>
+      <input
+        #fileInput
+        type="file"
+        (change)="getFileDetails($event)"
+        style="display: none"
+        multiple
+        accept="image/jpeg, image/png"
+      />
+    </label>
+  </div>
+
+  <!-- Displaying Selected Files -->
+  <div class="card">
+    <div class="card-header history-font">List Of Files</div>
+
+    <!-- File List -->
+    <ul class="list-group list-group-flush">
+      <li
+        class="list-group-item word-b word-wrap"
+        *ngFor="let file of myFiles; let i = index"
+      >
+        <span class="alert-danger word-b word-wrap">
+          {{ file.name }}
+          <span
+            class="material-icons remove pointer"
+            (click)="removeFile(i)"
+            matTooltip="Remove"
+          >
+            close
+          </span>
+        </span>
+      </li>
+    </ul>
+
+    <!-- Image Preview -->
+    <div class="image-gallery">
+      <div class="image-card" *ngFor="let image of myFiles">
+        <img [src]="image.url" alt="upload_img" class="image" />
+        <p>{{ image.name }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+      
+    </form>
+  </mat-card-content>
+
+  <mat-card-actions style="flex-direction: row-reverse">
+    <button color="success" mat-dialog-close class="btn btn-outline-success">
+      Cancel
+    </button>
+    <button color="success" class="btn btn-success mR-10" (click)="onSubmit()">
+      Submit
+    </button>
+  </mat-card-actions>
+</mat-card>

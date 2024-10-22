@@ -1,0 +1,181 @@
+.choose-file-css {
+  display: block;
+  width: 120px;
+  height: 30px;
+  margin-bottom: 5px;
+  border-radius: 2px;
+  font-size: 12px;
+}
+
+input[type='file'] {
+  font-size: 12px;
+  color: transparent;
+}
+
+::file-selector-button {
+  font-size: 12px;
+}
+
+.fnSize {
+  font-size: 12px;
+}
+
+.choose-file-1 {
+  font-size: 12px;
+  margin-top: 6px;
+  width: max-content;
+  background: lightgray;
+  color: black;
+  padding: 1px;
+}
+
+.file-upload {
+  border-radius: 50px !important;
+  background-color: lightgrey;
+  font-weight: 400;
+  outline: none;
+  border: none;
+  width: 100px;
+  line-height: 28px !important;
+}
+
+.remove {
+  float: right;
+  display: flex;
+  font-size: medium;
+}
+
+.image-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.image-card {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 150px;
+}
+
+.image {
+  width: 100%;
+  height: 80%;
+}
+
+.dialog-card {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.dialog-card-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.dialog-title {
+  font-size: 1.5em;
+  font-weight: 600;
+}
+
+.dialog-divider {
+  width: 100%;
+  margin: 10px 0;
+}
+
+.dialog-form {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.bulk-discount-section {
+  background-color: #f5f5f5; /* Light grey background */
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.discount-section-label {
+  font-size: 1.2em;
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.discount-container {
+  background-color: #ffffff; /* White background for each item */
+  border: 1px solid #e0e0e0; /* Light border */
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.discount-container mat-form-field {
+  flex: 1 1 30%; /* Adjust width as needed */
+  min-width: 120px;
+}
+
+.discount-container button {
+  align-self: flex-start; /* Align button to the top */
+  margin-top: 5px;
+}
+
+
+.discount-matrix-section {
+  background-color: #f5f5f5; /* Light grey background */
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.discount-matrix-section-label {
+  font-size: 1.2em;
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.discount-matrix-container {
+  background-color: #ffffff; /* White background for each item */
+  border: 1px solid #e0e0e0; /* Light border */
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.discount-matrix-container mat-form-field {
+  flex: 1 1 30%; /* Adjust width as needed */
+  min-width: 120px;
+}
+
+.discount-matrix-container button {
+  align-self: flex-start; /* Align button to the top */
+  margin-top: 5px;
+}
+
+
+.mat-icon-button {
+  padding: 5px; /* Smaller button padding */
+}
+
+.mat-icon {
+  font-size: 20px; /* Smaller icon size */
+}
+
+
+
+

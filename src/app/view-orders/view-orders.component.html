@@ -1,0 +1,62 @@
+  <mat-card class="order-details-card">
+    <mat-card-header class="view-details">
+      <mat-card-title>
+        <h2 class="header-text">View Orders</h2>
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="grid-container">
+
+        <ng-container *ngFor="let data of addressData">
+          <div class="grid-item label">{{ data.key | transform }}</div>
+          <div class="grid-item value">{{data.value}}</div>
+        </ng-container>
+
+        <div class="grid-item label">Payment Status</div>
+        <div class="grid-item value pending">{{viewOrder.applicationData.paymentStatus}}</div>
+
+        <div class="grid-item label">Payment Type</div>
+        <div class="grid-item value"> {{viewOrder.applicationData.paymentType}}</div>
+
+        <div class="grid-item label">Date and Time</div>
+        <div class="grid-item value"> {{viewOrder.applicationData.dateAndTimeOrderPlaced}}</div>
+
+        <div class="grid-item label">Total Order Value</div>
+        <div class="grid-item value">{{viewOrder.applicationData.totalAmount}}</div>
+
+        <div class="grid-item label">Products</div>
+        <div class="grid-item value">
+          <div class="product-detail"  *ngFor="let data of productData">
+            <div class="product-info">
+              <div>
+                <strong> Product Id: </strong>
+                {{data.productId}}
+              </div>
+              <div>
+                <strong>Product Name: </strong>
+                {{data.productName}}
+              </div>
+              <div>
+                <strong>Quantity: </strong>
+                {{data.quantity}}
+              </div>
+
+              <div>
+                <strong>Price Per Unit: </strong>
+                {{data.pricePerUnit}}
+              </div>
+
+              <div>
+                <strong> Total Amount: </strong>
+                {{data.totalAmount}}
+              </div>
+            </div>
+          </div>
+          </div>
+      </div>
+    </mat-card-content>
+  <div class="margin-15">
+    <button class="view-product-btn" mat-dialog-close color="success" (click)="closeDialog()">Close</button>
+  </div>
+</mat-card>
+

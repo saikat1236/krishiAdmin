@@ -1,0 +1,24 @@
+.page_not_found {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  text-align: center;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  &__error404{
+    margin-top: 66.25rem;
+    margin-left: 6rem;
+  }
+}
+
+.back_image{
+  background-image: url('../../../assets/images/not_found.jpg');
+  backface-visibility: visible;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+}
+
+

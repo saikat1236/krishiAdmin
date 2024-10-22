@@ -1,0 +1,21 @@
+<notifier-container></notifier-container>
+<mat-card class="dialog-card-confirm">
+  <h1 class="bg-color pos-center">
+    Confirm
+  </h1>
+  <mat-card-header >
+    <mat-icon (click)="close(false)" (keypress)="close(false)" class="bg-color pointer close-pos"
+    matTooltip="close">close</mat-icon>
+  </mat-card-header>
+  <mat-card-content>
+    <span class="font-size-18">{{ data.message }}</span>
+  </mat-card-content>
+  <mat-card-actions style="justify-content: flex-end;">
+    <div mat-dialog-actions>
+      <button mat-dialog-close class="btn btn-outline-success"
+        (click)="close(false)">No</button>
+      <button color="success" class="btn btn-success mL-10"
+        (click)="onSubmit()">Yes</button>
+    </div>
+  </mat-card-actions>
+</mat-card>

@@ -1,0 +1,262 @@
+<notifier-container></notifier-container>
+<div *ngIf="isLoading" class="loader-overlay">
+  <mat-spinner color="warn"></mat-spinner>
+</div>
+<mat-sidenav-container *ngIf="!isLoading" class="sidenav-container">
+  <mat-sidenav #sidenav mode="side" opened class="sidenav">
+    <mat-toolbar color="primary" style="background-color: #198754;
+    color: white;" class="toolbar-col">
+      <mat-icon class="material-symbols-outlined">
+        account_circle
+      </mat-icon> &nbsp;
+      {{userData.name | transform}}
+    </mat-toolbar>
+    <mat-nav-list>
+      <a mat-list-item *ngFor="let link of links" (click)="redirectsPage(link.name)">
+        <mat-icon style="vertical-align: text-bottom;"matPrefix>
+          {{link.icon}}
+        </mat-icon>&nbsp;
+        <span matLine>{{link.name}}</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar class="toolbar-col" style="background-color: #198754;
+    color: white;" click>
+      <button mat-icon-button (click)="sidenav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span>Order Dashboard</span>
+
+      <span class="pointer dis-content">
+        <mat-icon [matMenuTriggerFor]="belowMenu" matTooltip="User Profile"
+          style="right: 20px; position: absolute;" matSuffix
+          class="material-symbols-outlined">
+          account_circle
+        </mat-icon>
+
+
+        <mat-menu #belowMenu="matMenu" yPosition="below">
+          <span mat-menu-item matTooltip="Role">{{userData.role}}
+            <mat-icon matSuffix>badge</mat-icon>
+          </span>
+
+          <span mat-menu-item (click)="editProfile()"
+          (keypress)="editProfile()"
+            matTooltip="Change Password">
+            <span>Change Password</span>
+            <mat-icon matSuffix>password</mat-icon>
+          </span>
+
+          <button routerLink="/krishi-admin" routerLinkActive="true"
+            (click)="navigate('logout')"  matTooltip="Logout" mat-menu-item>Logout
+            <mat-icon matSuffix>logout</mat-icon>
+          </button>
+        </mat-menu>
+
+      </span>
+    </mat-toolbar>
+
+    <div class="content">
+      <mat-card class="welcome-card">
+        <mat-card-header>
+          <mat-card-title>
+            <h1>Ordered List</h1>
+            <div class="search-container">
+              <div class="search-container">
+                <div class="search-box">
+                  <button class="search-button">
+                    <mat-icon>search</mat-icon>
+                  </button>
+                  <input (keyup)="applyFilter($event)" matInput
+                    autocomplete="off" aria-label="search"
+                    placeholder="Search..."
+                    [(ngModel)]="searchQuery" class="search-input">
+
+                  <button *ngIf="isSearchData" class="search-button"
+                    (click)="clearSearch()">
+                    <mat-icon matSuffix>clear</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+
+        <div class="container">
+          <mat-form-field appearance="outline" floatLabel="always" class="query-state">
+            <mat-label>Filter By:- </mat-label>
+            <mat-select [(value)]="selectedOption">
+                <mat-option *ngFor="let option of options" (keypress)="orderStatus(option)" (click)="orderStatus(option)" [value]="option">
+                  {{ option }}
+                </mat-option>
+              </mat-select>
+              <mat-icon matSuffix>query_stats</mat-icon>
+            </mat-form-field>
+            <div>
+          </div>
+        </div>
+
+        <div class="page-pos">
+          <mat-form-field [floatLabel]="'always'" appearance="outline" class="page-limit-pos">
+          <mat-label>Page Limit</mat-label>
+          <mat-select [(value)]="originalPageLimit">
+              <mat-option *ngFor="let option of pageOptionSize" (keypress)="selectPageNumber(option)"
+                (click)="selectPageNumber(option)" [value]="option">
+                {{ option }}
+              </mat-option>
+            </mat-select>
+            <mat-icon matSuffix>format_list_numbered</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field class="page-limit-pos mL-10" [floatLabel]="'always'" appearance="outline">
+           <mat-label>Page Number</mat-label>
+           <input matInput min="1" (ngModelChange)="changePageLimit($event)" type="number" [(ngModel)]="selectPage" aria-label="type" placeholder="Type">
+           <mat-icon matSuffix>format_list_numbered</mat-icon>
+          </mat-form-field>
+
+          <button color="success" mat-dialog-close class="btn btn-success find-btn-pos mL-10" (click)="listFind()">Find</button>
+        </div>
+
+          <div class="example-container mat-elevation-z8 table-pos">
+            <table  mat-table matTableResponsive [dataSource]="dataSource" matSort
+              multiTemplateDataRows matSort
+              (matSortChange)="sortChange($event)">
+
+              <ng-container matColumnDef="userName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  <strong>
+                    Name
+                  </strong>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.userName}}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  <strong>
+                    Email
+                  </strong>
+                </th>
+                <td mat-cell *matCellDef="let element">{{element?.email}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="dateAndTimeOrderPlaced">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  <strong>
+                    Date and
+                    Time
+                  </strong>
+                  </th>
+                <td mat-cell
+                  *matCellDef="let element">{{element?.dateAndTimeOrderPlaced |
+                  date: 'medium'}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="mobileNumber">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  <strong>
+                    Mobile Number
+                  </strong>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element?.mobileNumber}}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="paymentStatus">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  <strong>
+                    Payment Status
+                  </strong>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element?.paymentStatus}}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="paymentType">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  <strong>
+                    Payment Type
+                  </strong>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element?.paymentType}}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="currentOrderStatus">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  <strong>
+                    Order Status
+                  </strong>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element?.currentOrderStatus?.status}}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <th [disabled]="isSortingDisabled('action')" mat-header-cell *matHeaderCellDef mat-sort-header>
+                  <strong>
+                    Action
+                  </strong>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <mat-icon matTooltip="View" (keypress)="viewOrders(element)"
+                    (click)="viewOrders(element)" class="pointer">visibility
+                  </mat-icon>
+
+                  <mat-icon class="pointer" style="color:#198754;
+                    font-weight: bold;" [matTooltip]="element?.currentOrderStatus?.status"
+                    *ngIf="element?.currentOrderStatus?.status === 'Delievered'">
+                    check_box
+                  </mat-icon>
+
+                  <mat-icon class="pointer" style="color:red; font-weight: bold;"
+                    [matTooltip]="element?.currentOrderStatus?.status"
+                    *ngIf="element?.currentOrderStatus?.status === 'cancelled'">
+                    close
+                  </mat-icon>
+
+                  <mat-icon class="pointer" style="color:yellowgreen; font-weight: bold;"
+                    (keypress)="trackOrderStatus(element, element?.currentOrderStatus?.status)"
+                    (click)="trackOrderStatus(element, element?.currentOrderStatus?.status)"
+                    [matTooltip]="element?.currentOrderStatus?.status"
+                    *ngIf="element?.currentOrderStatus?.status === 'placed'">
+                    <span class="material-symbols-outlined">
+                      monitoring
+                    </span>
+                  </mat-icon>
+
+                  <mat-icon class="pointer" style="color:orangered; font-weight: bold;"
+                    (keypress)="trackOrderStatus(element, element?.currentOrderStatus?.status)"
+                    (click)="trackOrderStatus(element, element?.currentOrderStatus?.status)"
+                    [matTooltip]="element?.currentOrderStatus?.status"
+                    *ngIf="element?.currentOrderStatus?.status === 'shipped'">
+
+                    <span class="material-symbols-outlined">
+                      monitoring
+                    </span>
+                  </mat-icon>
+
+                  <mat-icon class="pointer" style="color:orange; font-weight: bold;"
+                    (keypress)="trackOrderStatus(element, element?.currentOrderStatus?.status)"
+                    (click)="trackOrderStatus(element, element?.currentOrderStatus?.status)"
+                    [matTooltip]="element?.currentOrderStatus?.status"
+                    *ngIf="element?.currentOrderStatus?.status === 'outForDelivery'">
+                    <span class="material-symbols-outlined">
+                      monitoring
+                    </span>
+                  </mat-icon>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
