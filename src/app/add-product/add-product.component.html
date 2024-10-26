@@ -33,11 +33,14 @@
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Category</mat-label>
         <mat-select formControlName="category">
-          <mat-option *ngFor="let category of categories" [value]="category.key">
+          <mat-option
+            *ngFor="let category of categories"
+            [value]="category.key"
+          >
             {{ category.value }}
           </mat-option>
         </mat-select>
-      </mat-form-field>      
+      </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Min Quantity</mat-label>
@@ -90,7 +93,7 @@
           matInput
           formControlName="pricePerUnit"
           min="0"
-          type="text"
+          type="number"
           placeholder="Price Per Unit"
           aria-label="pricePerUnit"
           (keypress)="validateNumber($event)"
@@ -126,6 +129,7 @@
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Discount</mat-label>
         <input
+          type="number"
           matInput
           formControlName="discount"
           placeholder="Discount"
@@ -133,23 +137,42 @@
         />
       </mat-form-field>
 
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Labels</mat-label>
+        <mat-select formControlName="selectedLabels" multiple>
+          <mat-option *ngFor="let label of labels2" [value]="label.name">
+            {{ label.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      
+
       <!-- <mat-form-field appearance="outline" class="full-width">
         <mat-label>Labels</mat-label>
-        <div formArrayName="labels" class="checkbox-group">
-          <div *ngFor="let label of labels; let i = index">
-            <mat-checkbox 
-              [formControlName]="i" 
+        <mat-select formControlName="labels" multiple>
+          <mat-option *ngFor="let label of labels" [value]="label.name">
+            {{ label.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field> -->
+      
+
+      <!-- <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Labels</mat-label>
+        <mat-checkbox-group formArrayName="labels">
+          <ng-container *ngFor="let label of labels; let i = index">
+            <mat-checkbox
+            mat-checkbox
+              [formControlName]="i"
               (change)="onLabelChange(label, $event.checked)"
               class="custom-checkbox">
               {{ label.name }}
             </mat-checkbox>
-          </div>
-        </div>
-      </mat-form-field> -->
-      
-      
-      
-      
+          </ng-container>
+        </mat-checkbox-group>
+      </mat-form-field>
+       -->
+
 
       <!-- <mat-form-field appearance="outline" class="full-width">
         <mat-label>Seller Id</mat-label>
@@ -234,68 +257,68 @@
         </div>
       </div> -->
 
-<div formArrayName="images" class="full-width mT-20">
-  <mat-label style="font-size: 18px; font-weight: 700">Upload File</mat-label>
+      <div formArrayName="images" class="full-width mT-20">
+        <mat-label style="font-size: 18px; font-weight: 700"
+          >Upload File</mat-label
+        >
 
-  <div *ngIf="images.invalid && images.touched" class="error-message">
-    Please upload at least one image.
-  </div>
+        <div *ngIf="images.invalid && images.touched" class="error-message">
+          Please upload at least one image.
+        </div>
 
-  <div>
-    <label class="btn btn-default pad-0" style="margin: 0px">
-      <button
-        mat-button
-        class="choose-file-1 mB-10 file-upload"
-        (click)="fileInput.click()"
-        tabindex="0"
-      >
-        Choose File
-      </button>
-      <input
-        #fileInput
-        type="file"
-        (change)="getFileDetails($event)"
-        style="display: none"
-        multiple
-        accept="image/jpeg, image/png"
-      />
-    </label>
-  </div>
+        <div>
+          <label class="btn btn-default pad-0" style="margin: 0px">
+            <button
+              mat-button
+              class="choose-file-1 mB-10 file-upload"
+              (click)="fileInput.click()"
+              tabindex="0"
+            >
+              Choose File
+            </button>
+            <input
+              #fileInput
+              type="file"
+              (change)="getFileDetails($event)"
+              style="display: none"
+              multiple
+              accept="image/jpeg, image/png"
+            />
+          </label>
+        </div>
 
-  <!-- Displaying Selected Files -->
-  <div class="card">
-    <div class="card-header history-font">List Of Files</div>
+        <!-- Displaying Selected Files -->
+        <div class="card">
+          <div class="card-header history-font">List Of Files</div>
 
-    <!-- File List -->
-    <ul class="list-group list-group-flush">
-      <li
-        class="list-group-item word-b word-wrap"
-        *ngFor="let file of myFiles; let i = index"
-      >
-        <span class="alert-danger word-b word-wrap">
-          {{ file.name }}
-          <span
-            class="material-icons remove pointer"
-            (click)="removeFile(i)"
-            matTooltip="Remove"
-          >
-            close
-          </span>
-        </span>
-      </li>
-    </ul>
+          <!-- File List -->
+          <ul class="list-group list-group-flush">
+            <li
+              class="list-group-item word-b word-wrap"
+              *ngFor="let file of myFiles; let i = index"
+            >
+              <span class="alert-danger word-b word-wrap">
+                {{ file.name }}
+                <span
+                  class="material-icons remove pointer"
+                  (click)="removeFile(i)"
+                  matTooltip="Remove"
+                >
+                  close
+                </span>
+              </span>
+            </li>
+          </ul>
 
-    <!-- Image Preview -->
-    <div class="image-gallery">
-      <div class="image-card" *ngFor="let image of myFiles">
-        <img [src]="image.url" alt="upload_img" class="image" />
-        <p>{{ image.name }}</p>
+          <!-- Image Preview -->
+          <div class="image-gallery">
+            <div class="image-card" *ngFor="let image of myFiles">
+              <img [src]="image.url" alt="upload_img" class="image" />
+              <p>{{ image.name }}</p>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</div>
-
-      
     </form>
   </mat-card-content>
 

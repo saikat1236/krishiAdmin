@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from "@angular/material/dialog";
+import { FormBuilder, FormGroup, Validators, FormArray } from "@angular/forms";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { NotifierService } from "angular-notifier";
 import * as moment from 'moment';
@@ -30,22 +30,36 @@ export class AddProductComponent {
     { measure: 'Kilogram', value: 'kg' },
     { measure: 'Gram', value: 'gm' }
   ];
-  // labels: any[] = [
-  //   { value: 'Organic', viewValue: 'Organic' },
-  //   { value: 'Fresh', viewValue: 'Fresh' },
-  //   { value: 'Imported', viewValue: 'Imported' }
-  // ];
-  // categories: any[] = [
-  //   { value: 'Organic', viewValue: 'Organic' },
-  //   { value: 'Fresh', viewValue: 'Fresh' },
-  //   { value: 'Imported', viewValue: 'Imported' }
-  // ];
   labels: any[] = [];
-  categories: any[]=[];
-  
+  categories: any[] = [];
 
-  constructor(private fb: FormBuilder, public notifier: NotifierService, public applicationService: ApplicationService,
-    public router: Router, public dialog: MatDialog, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<AddProductComponent>) {
+  labels2: any[] = [
+    {
+        "name": "organic",
+        "imageUrl": "https://krishi-consumer-products.s3.amazonaws.com/labels/pureorganic.jpeg",
+        "info": "This is a label"
+    },
+    {
+        "name": "fresh",
+        "imageUrl": "https://krishi-consumer-products.s3.amazonaws.com/labels/fresh.jpeg",
+        "info": "This is a label"
+    },
+    {
+        "name": "off5",
+        "imageUrl": "https://krishi-consumer-products.s3.amazonaws.com/labels/off5.jpeg",
+        "info": "This is a label"
+    },
+    {
+        "name": "off10",
+        "imageUrl": "https://krishi-consumer-products.s3.amazonaws.com/labels/off10.jpeg",
+        "info": "This is a label"
+    }
+];
+
+
+  constructor(private fb: FormBuilder, public notifier: NotifierService,
+              public applicationService: ApplicationService, public router: Router,
+              public dialogRef: MatDialogRef<AddProductComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
     this.updateProductQuantity = this.fb.group({
       name: ['', Validators.required],
       category: ['', Validators.required],
@@ -55,44 +69,36 @@ export class AddProductComponent {
       totalAddedQuantity: ['', Validators.required],
       pricePerUnit: ['', Validators.required],
       about: ['', Validators.required],
-      // discountMatrix: this.fb.array([this.createDiscountGroup()]),
       images: this.fb.array([], Validators.required),
-      labels: this.fb.array([], Validators.required),
-      // labels: ['', Validators.required],
+      selectedLabels: [[], Validators.required], // Use a single FormControl for selected labels
       discount: ['', Validators.required],
-      // bulkOrderDiscounts: this.fb.array([this.createBulkOrderDiscounts()]),
       expireDate: ['', Validators.required],
-    }
-  );
+    });
   }
 
   ngOnInit(): void {
-    // this.initializeLabels();
     if (this.data) {
       this.getCategories();
-      this.getlabels();
+      this.getLabels();
     } else {
       console.error('No data provided');
     }
   }
-  // initializeLabels() {
-  //   this.labels.forEach(() => {
-  //     this.labelsArray.push(this.fb.control(false)); // Add a checkbox for each label
-  //   });
-  // }
-  // get labelsArray(): FormArray {
-  //   return this.updateProductQuantity.get('labels') as FormArray;
-  // }
-
-  // onLabelChange(label: any, isChecked: boolean) {
-  //   const index = this.labels.indexOf(label);
-  //   this.labelsArray.at(index).setValue(isChecked);
-  // }
 
   onSubmit() {
     const formData = this.updateProductQuantity.value;
     this.isLoading = true;
     formData.expireDate = moment(formData.expireDate).format('YYYY-MM-DD');
+
+    const selectedLabelNames = this.updateProductQuantity.get('selectedLabels')?.value || [];
+
+    // Filter and map the labels to get the required format
+    const selectedLabelObjects = this.labels
+      .filter(label => selectedLabelNames.includes(label.name))
+      .map(label => ({ name: label.name, imageUrl: label.imageUrl , info:label.info})); // Send the desired structure
+  
+    console.log('Selected labels to send:', selectedLabelObjects);
+
     if (this.updateProductQuantity.valid) {
       const request = {
         name: formData.name,
@@ -101,31 +107,28 @@ export class AddProductComponent {
         unit: formData.unit,
         totalAvailableQuantity: formData.totalAvailableQuantity,
         totalAddedQuantity: formData.totalAddedQuantity,
-        pricePerUnit: formData.pricePerUnit.toString(),
+        pricePerUnit: formData.pricePerUnit,
         about: formData.about,
         images: formData.images,
-        lebels: formData.labels,
+        labels: selectedLabelObjects, // Send selected labels directly
         discount: formData.discount,
         expireDate: formData.expireDate,
         margin: 20
-      }
+      };
       console.log('Form Data is', request);
       this.applicationService.addProduct(request).subscribe((response: any) => {
+        this.isLoading = false;
         if (response.status) {
-          this.isLoading = false;
-          this.notifier.notify('success', 'Product Update Successfully');
+          this.notifier.notify('success', 'Product Updated Successfully');
           this.close();
-        }
-        else {
-          this.isLoading = false;
+        } else {
           this.notifier.notify('error', response.message);
         }
-      }, (error) =>{
+      }, (error) => {
         this.isLoading = false;
         this.notifier.notify('error', error.error.message[0]);
       });
-    }
-    else {
+    } else {
       this.isLoading = false;
       this.notifier.notify('error', 'Please fill the form completely.');
     }
@@ -134,43 +137,6 @@ export class AddProductComponent {
   close() {
     this.dialogRef.close(true);
   }
-
-
-  // createDiscountGroup(): FormGroup {
-  //   return this.fb.group({
-  //     minKg: [0, [Validators.required, Validators.min(0)]],
-  //     maxKg: [0, [Validators.required, Validators.min(0)]],
-  //     discountPercentage: [0, [Validators.required, Validators.min(0)]]
-  //   });
-  // }
-
-  // addDiscount() {
-  //   this.discountMatrix.push(this.createDiscountGroup());
-  // }
-
-  // addDiscountBulk() {
-  //   this.bulkOrderDiscounts.push(this.createBulkOrderDiscounts());
-  // }
-
-  // removeDiscountBulk(index: number) {
-  //   this.bulkOrderDiscounts.removeAt(index);
-  // }
-
-  // removeDiscount(index: number) {
-  //   this.discountMatrix.removeAt(index);
-  // }
-
-  // createBulkOrderDiscounts(): FormGroup {
-  //   return this.fb.group({
-  //     minKg: [0, [Validators.required, Validators.min(0)]],
-  //     maxKg: [0, [Validators.required, Validators.min(0)]],
-  //     discountPercentage: [0, [Validators.required, Validators.min(0)]]
-  //   });
-  // }
-
-  // get bulkOrderDiscounts(): FormArray {
-  //   return this.updateProductQuantity.get('bulkOrderDiscounts') as FormArray;
-  // }
 
   get images(): FormArray {
     return this.updateProductQuantity.get('images') as FormArray;
@@ -184,22 +150,6 @@ export class AddProductComponent {
     this.myFiles.splice(index, 1);
     this.images.removeAt(index);
   }
-
-  // removeFile(index: number) {
-  //   this.myFiles.splice(index, 1);
-  //   // const control = this.updateProductQuantity.get('images') as FormArray;
-  //   control.removeAt(index);
-  // }
-
-  // getFileDetails(e: any) {
-  //   for (const selectedFile of e.target.files) {
-  //     const fileExtension = selectedFile.name.split('.').pop();
-  //     this.fileSelected.push(selectedFile);
-  //     console.log('File is ', this.fileSelected);
-  //     this.selectedFileAdd(selectedFile)
-  //   }
-  // }
-
   getFileDetails(event: any) {
     const files = event.target.files;
     for (let i = 0; i < files.length; i++) {
@@ -212,7 +162,6 @@ export class AddProductComponent {
       this.images.push(this.fb.control(file));
     }
   }
-
   selectedFileAdd(selectedFile: any){
     const reader = new FileReader();
     reader.onload = (e: any) => {
@@ -229,7 +178,6 @@ export class AddProductComponent {
     reader.readAsDataURL(selectedFile);
     this.images.push(newItem);
   }
-
   validateNumber(event: KeyboardEvent): void {
     const key = event.key;
     const currentValue = (event.target as HTMLInputElement).value;
@@ -241,36 +189,19 @@ export class AddProductComponent {
     }
   }
 
-    getCategories() {
-      this.applicationService.getCategoriesAdmin().subscribe((response: any) => {
-        if (response.status) {
-          this.categories = response.payload;
-        }
-      });
-    }
-    getlabels() {
-      this.applicationService.getLabels().subscribe((response: any) => {
-        if (response.status) {
-          this.labels = response.payload;
-          this.initializeLabels(); 
-        }
-      });
-    }
+  getCategories() {
+    this.applicationService.getCategoriesAdmin().subscribe((response: any) => {
+      if (response.status) {
+        this.categories = response.payload;
+      }
+    });
+  }
 
-    initializeLabels() {
-      this.labels.forEach(() => {
-        this.labelsArray.push(this.fb.control(false)); // Initialize checkbox controls
-      });
-    }
-    
-    get labelsArray(): FormArray {
-      return this.updateProductQuantity.get('labels') as FormArray;
-    }
-    onLabelChange(label: any, isChecked: boolean) {
-      const index = this.labels.indexOf(label);
-      this.labelsArray.at(index).setValue(isChecked); // Set the FormArray control value
-    }
-    
-
-
+  getLabels() {
+    this.applicationService.getLabels().subscribe((response: any) => {
+      if (response.status) {
+        this.labels = response.payload;
+      }
+    });
+  }
 }
