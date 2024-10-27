@@ -33,46 +33,46 @@ export class UpdateProductComponent implements OnInit {
       totalAddedQuantity: [data.selectedApplication.totalAddedQuantity, Validators.required],
       pricePerUnit: [data.selectedApplication.pricePerUnit, Validators.required],
       about: [data.selectedApplication.about, Validators.required],
-      discountMatrix: this.fb.array([this.createDiscountGroup()]),
+      // discountMatrix: this.fb.array([this.createDiscountGroup()]),
       images: [data.selectedApplication.images, Validators.required],
-      sellerId: [data.selectedApplication.sellerId, Validators.required],
-      bulkOrderDiscounts: this.fb.array([this.createBulkOrderDiscounts()]),
+      // sellerId: [data.selectedApplication.sellerId, Validators.required],
+      // bulkOrderDiscounts: this.fb.array([this.createBulkOrderDiscounts()]),
       expireDate: [data.selectedApplication.expireDate, Validators.required],
     }
     );
   }
   ngOnInit(): void {
-    if(this.data.selectedApplication.discountMatrix){
-      this.preFetchDiscountMatrix(this.data.selectedApplication.discountMatrix);
-    }
-    if(this.data.selectedApplication.bulkOrderDiscounts){
-      this.preFetchDiscountBulkOrderMatrix(this.data.selectedApplication.bulkOrderDiscounts)
-    }
+    // if(this.data.selectedApplication.discountMatrix){
+    //   this.preFetchDiscountMatrix(this.data.selectedApplication.discountMatrix);
+    // }
+    // if(this.data.selectedApplication.bulkOrderDiscounts){
+    //   this.preFetchDiscountBulkOrderMatrix(this.data.selectedApplication.bulkOrderDiscounts)
+    // }
   }
 
-  createDiscountGroup(): FormGroup {
-    return this.fb.group({
-      minKg: [0, [Validators.required, Validators.min(0)]],
-      maxKg: [0, [Validators.required, Validators.min(0)]],
-      discountPercentage: [0, [Validators.required, Validators.min(0)]]
-    });
-  }
+  // createDiscountGroup(): FormGroup {
+  //   return this.fb.group({
+  //     minKg: [0, [Validators.required, Validators.min(0)]],
+  //     maxKg: [0, [Validators.required, Validators.min(0)]],
+  //     discountPercentage: [0, [Validators.required, Validators.min(0)]]
+  //   });
+  // }
 
-  addDiscount() {
-    this.discountMatrix.push(this.createDiscountGroup());
-  }
+  // addDiscount() {
+  //   this.discountMatrix.push(this.createDiscountGroup());
+  // }
 
-  addDiscountBulk() {
-    this.bulkOrderDiscounts.push(this.createBulkOrderDiscounts());
-  }
+  // addDiscountBulk() {
+  //   this.bulkOrderDiscounts.push(this.createBulkOrderDiscounts());
+  // }
 
-  removeDiscountBulk(index: number) {
-    this.bulkOrderDiscounts.removeAt(index);
-  }
+  // removeDiscountBulk(index: number) {
+  //   this.bulkOrderDiscounts.removeAt(index);
+  // }
 
-  removeDiscount(index: number) {
-    this.discountMatrix.removeAt(index);
-  }
+  // removeDiscount(index: number) {
+  //   this.discountMatrix.removeAt(index);
+  // }
 
   validateNumber(event: KeyboardEvent): void {
     const key = event.key;
@@ -98,37 +98,37 @@ export class UpdateProductComponent implements OnInit {
     }
   }
 
-  createBulkOrderDiscounts() {
-    return this.fb.group({
-      minKg: [0, [Validators.required, Validators.min(0)]],
-      maxKg: [0, [Validators.required, Validators.min(0)]],
-      discountPercentage: [0, [Validators.required, Validators.min(0)]]
-    });
-  }
+  // createBulkOrderDiscounts() {
+  //   return this.fb.group({
+  //     minKg: [0, [Validators.required, Validators.min(0)]],
+  //     maxKg: [0, [Validators.required, Validators.min(0)]],
+  //     discountPercentage: [0, [Validators.required, Validators.min(0)]]
+  //   });
+  // }
 
-  preFetchDiscountMatrix(data: any[]) {
-    data.forEach(discount => {
-      this.discountMatrix.push(this.fb.group(discount));
-    });
-  }
+  // preFetchDiscountMatrix(data: any[]) {
+  //   data.forEach(discount => {
+  //     this.discountMatrix.push(this.fb.group(discount));
+  //   });
+  // }
 
-  preFetchDiscountBulkOrderMatrix(data: any[]) {
-    data.forEach(discount => {
-      this.bulkOrderDiscounts.push(this.fb.group(discount));
-    });
-  }
+  // preFetchDiscountBulkOrderMatrix(data: any[]) {
+  //   data.forEach(discount => {
+  //     this.bulkOrderDiscounts.push(this.fb.group(discount));
+  //   });
+  // }
 
-  get bulkOrderDiscounts(): FormArray {
-    return this.updateProductQuantity.get('bulkOrderDiscounts') as FormArray;
-  }
+  // get bulkOrderDiscounts(): FormArray {
+  //   return this.updateProductQuantity.get('bulkOrderDiscounts') as FormArray;
+  // }
 
   get items(): FormArray {
     return this.updateProductQuantity.get('images') as FormArray;
   }
 
-  get discountMatrix(): FormArray {
-    return this.updateProductQuantity.get('discountMatrix') as FormArray;
-  }
+  // get discountMatrix(): FormArray {
+  //   return this.updateProductQuantity.get('discountMatrix') as FormArray;
+  // }
 
   onSubmit() {
     const formData = this.updateProductQuantity.value;
@@ -145,10 +145,10 @@ export class UpdateProductComponent implements OnInit {
         totalAddedQuantity: formData.totalAddedQuantity,
         pricePerUnit: formData.pricePerUnit,
         about: formData.about,
-        discountMatrix: formData.discountMatrix,
+        // discountMatrix: formData.discountMatrix,
         images: formData.images,
-        sellerId: formData.sellerId,
-        bulkOrderDiscounts: formData.bulkOrderDiscounts,
+        // sellerId: formData.sellerId,
+        // bulkOrderDiscounts: formData.bulkOrderDiscounts,
         expireDate: formData.expireDate
       }
       this.applicationService.updateProduct(request).subscribe((response: any) => {

@@ -1,5 +1,5 @@
-// const API_URL = 'http://54.159.124.169:3001/';
-const API_URL = 'https://backend.krishimandi.in/';
+const API_URL = 'http://54.159.124.169:3001/';
+// const API_URL = 'https://backend.krishimandi.in/';
 
 export const environment = {
   production: false,
