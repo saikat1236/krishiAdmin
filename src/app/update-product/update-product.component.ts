@@ -1,26 +1,64 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from "@angular/material/dialog";
-import { Router } from "@angular/router";
-import { NotifierService } from "angular-notifier";
-import { ApplicationService } from "../core/services/application.service";
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogRef,
+} from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { NotifierService } from 'angular-notifier';
+import { ApplicationService } from '../core/services/application.service';
 
 @Component({
   selector: 'app-update-product',
   templateUrl: './update-product.component.html',
-  styleUrls: ['./update-product.component.scss']
+  styleUrls: ['./update-product.component.scss'],
 })
 export class UpdateProductComponent implements OnInit {
-
   updateProductQuantity: FormGroup;
   isLoading = false;
   units: any[] = [
     { measure: 'Kilogram', value: 'kg' },
-    { measure: 'Gram', value: 'gm' }
+    { measure: 'Gram', value: 'gm' },
+  ];
+  labels: any[] = [];
+  categories: any[] = [];
+  labels2: any[] = [
+    {
+      name: 'organic',
+      imageUrl:
+        'https://krishi-consumer-products.s3.amazonaws.com/labels/pureorganic.jpeg',
+      info: 'This is a label',
+    },
+    {
+      name: 'fresh',
+      imageUrl:
+        'https://krishi-consumer-products.s3.amazonaws.com/labels/fresh.jpeg',
+      info: 'This is a label',
+    },
+    {
+      name: 'off5',
+      imageUrl:
+        'https://krishi-consumer-products.s3.amazonaws.com/labels/off5.jpeg',
+      info: 'This is a label',
+    },
+    {
+      name: 'off10',
+      imageUrl:
+        'https://krishi-consumer-products.s3.amazonaws.com/labels/off10.jpeg',
+      info: 'This is a label',
+    },
   ];
 
-  constructor(private fb: FormBuilder, public notifier: NotifierService, public applicationService: ApplicationService,
-    public router: Router, public dialog: MatDialog, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<UpdateProductComponent>) {
+  constructor(
+    private fb: FormBuilder,
+    public notifier: NotifierService,
+    public applicationService: ApplicationService,
+    public router: Router,
+    public dialog: MatDialog,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    public dialogRef: MatDialogRef<UpdateProductComponent>
+  ) {
     console.log('Data', data);
 
     this.updateProductQuantity = this.fb.group({
@@ -29,25 +67,44 @@ export class UpdateProductComponent implements OnInit {
       category: [data.selectedApplication.category, Validators.required],
       minQuantity: [data.selectedApplication.minQuantity, Validators.required],
       unit: [data.selectedApplication.unit, Validators.required],
-      totalAvailableQuantity: [data.selectedApplication.totalAvailableQuantity, Validators.required],
-      totalAddedQuantity: [data.selectedApplication.totalAddedQuantity, Validators.required],
-      pricePerUnit: [data.selectedApplication.pricePerUnit, Validators.required],
+      totalAvailableQuantity: [
+        data.selectedApplication.totalAvailableQuantity,
+        Validators.required,
+      ],
+      totalAddedQuantity: [
+        data.selectedApplication.totalAddedQuantity,
+        Validators.required,
+      ],
+      pricePerUnit: [
+        data.selectedApplication.pricePerUnit,
+        Validators.required,
+      ],
       about: [data.selectedApplication.about, Validators.required],
       // discountMatrix: this.fb.array([this.createDiscountGroup()]),
-      images: [data.selectedApplication.images, Validators.required],
+      // images: [data.selectedApplication.images, Validators.required],
       // sellerId: [data.selectedApplication.sellerId, Validators.required],
       // bulkOrderDiscounts: this.fb.array([this.createBulkOrderDiscounts()]),
+      images: [data.selectedApplication.images, Validators.required],
+      discount: [data.selectedApplication.discount, Validators.required],
+      selectedLabels: [data.selectedApplication.selectedLabels, Validators.required], // Use a single FormControl for selected labels
       expireDate: [data.selectedApplication.expireDate, Validators.required],
-    }
-    );
+    });
   }
+  // ngOnInit(): void {
+  //   // if(this.data.selectedApplication.discountMatrix){
+  //   //   this.preFetchDiscountMatrix(this.data.selectedApplication.discountMatrix);
+  //   // }
+  //   // if(this.data.selectedApplication.bulkOrderDiscounts){
+  //   //   this.preFetchDiscountBulkOrderMatrix(this.data.selectedApplication.bulkOrderDiscounts)
+  //   // }
+  // }
   ngOnInit(): void {
-    // if(this.data.selectedApplication.discountMatrix){
-    //   this.preFetchDiscountMatrix(this.data.selectedApplication.discountMatrix);
-    // }
-    // if(this.data.selectedApplication.bulkOrderDiscounts){
-    //   this.preFetchDiscountBulkOrderMatrix(this.data.selectedApplication.bulkOrderDiscounts)
-    // }
+    if (this.data) {
+      this.getCategories();
+      this.getLabels();
+    } else {
+      console.error('No data provided');
+    }
   }
 
   // createDiscountGroup(): FormGroup {
@@ -74,6 +131,22 @@ export class UpdateProductComponent implements OnInit {
   //   this.discountMatrix.removeAt(index);
   // }
 
+  // selectedFileAdd(selectedFile: any) {
+  //   const reader = new FileReader();
+  //   reader.onload = (e: any) => {
+  //     console.log('E', e);
+  //     this.myFiles.push({ name: selectedFile.name, url: e.target.result });
+  //     const nameOrderMap = this.images.value.map((item: any) => item.name);
+  //     this.myFiles.sort((a, b) => {
+  //       return nameOrderMap.indexOf(a.name) - nameOrderMap.indexOf(b.name);
+  //     });
+  //     this.selectedFile = this.myFiles;
+  //     this.attachmentsName.push(selectedFile.name);
+  //   };
+  //   const newItem = this.fb.control(selectedFile, Validators.required);
+  //   reader.readAsDataURL(selectedFile);
+  //   this.images.push(newItem);
+  // }
   validateNumber(event: KeyboardEvent): void {
     const key = event.key;
     const currentValue = (event.target as HTMLInputElement).value;
@@ -86,7 +159,6 @@ export class UpdateProductComponent implements OnInit {
       event.preventDefault();
     }
   }
-
 
   // Validate paste event to allow only numbers
   validatePaste(event: ClipboardEvent): void {
@@ -133,7 +205,22 @@ export class UpdateProductComponent implements OnInit {
   onSubmit() {
     const formData = this.updateProductQuantity.value;
     console.log('Form Data is', formData);
-    this.isLoading= true;
+    this.isLoading = true;
+
+    const selectedLabelNames =
+    this.updateProductQuantity.get('selectedLabels')?.value || [];
+
+  // Filter and map the labels to get the required format
+  const selectedLabelObjects = this.labels
+    .filter((label) => selectedLabelNames.includes(label.name))
+    .map((label) => ({
+      name: label.name,
+      imageUrl: label.imageUrl,
+      info: label.info,
+    })); // Send the desired structure
+
+  console.log('Selected labels to send:', selectedLabelObjects);
+
     if (this.updateProductQuantity.valid) {
       const request = {
         productId: formData.productId,
@@ -143,30 +230,31 @@ export class UpdateProductComponent implements OnInit {
         unit: formData.unit,
         totalAvailableQuantity: formData.totalAvailableQuantity,
         totalAddedQuantity: formData.totalAddedQuantity,
-        pricePerUnit: formData.pricePerUnit,
+        pricePerUnit: formData.pricePerUnit.toString(),
         about: formData.about,
-        // discountMatrix: formData.discountMatrix,
         images: formData.images,
-        // sellerId: formData.sellerId,
-        // bulkOrderDiscounts: formData.bulkOrderDiscounts,
-        expireDate: formData.expireDate
-      }
-      this.applicationService.updateProduct(request).subscribe((response: any) => {
-        if (response.status) {
+        labels: selectedLabelObjects, // Send selected labels directly
+        discount: formData.discount,
+        expireDate: formData.expireDate,
+        margin: 20,
+      };
+      this.applicationService.updateProduct(request).subscribe(
+        (response: any) => {
+          if (response.status) {
+            this.isLoading = false;
+            this.notifier.notify('success', 'Product Update Successfully');
+            this.close();
+          } else {
+            this.isLoading = false;
+            this.notifier.notify('error', response.message[0]);
+          }
+        },
+        (error) => {
           this.isLoading = false;
-          this.notifier.notify('success', 'Product Update Successfully');
-          this.close();
+          this.notifier.notify('error', error.error.message[0]);
         }
-        else {
-          this.isLoading = false;
-          this.notifier.notify('error', response.message[0]);
-        }
-      }, (error) =>{
-        this.isLoading = false;
-        this.notifier.notify('error', error.error.message[0]);
-      })
-    }
-    else {
+      );
+    } else {
       this.isLoading = false;
       this.notifier.notify('error', 'All Fields are mandatory.');
     }
@@ -175,4 +263,38 @@ export class UpdateProductComponent implements OnInit {
   close() {
     this.dialogRef.close(true);
   }
+
+
+  getCategories() {
+    this.applicationService.getCategoriesAdmin().subscribe((response: any) => {
+      if (response.status) {
+        this.categories = response.payload;
+      }
+    });
+  }
+
+  getLabels() {
+    this.applicationService.getLabels().subscribe((response: any) => {
+      if (response.status) {
+        this.labels = response.payload;
+      }
+    });
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

@@ -1,19 +1,18 @@
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormArray } from "@angular/forms";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { Router } from "@angular/router";
-import { NotifierService } from "angular-notifier";
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { NotifierService } from 'angular-notifier';
 import * as moment from 'moment';
-import { ThemePalette } from "@angular/material/core";
-import { ApplicationService } from "../core/services/application.service";
+import { ThemePalette } from '@angular/material/core';
+import { ApplicationService } from '../core/services/application.service';
 
 @Component({
   selector: 'app-add-product',
   templateUrl: './add-product.component.html',
-  styleUrls: ['./add-product.component.scss']
+  styleUrls: ['./add-product.component.scss'],
 })
 export class AddProductComponent {
-
   updateProductQuantity: FormGroup;
   allowedFileTypes = ['png, jpg'];
   myFiles: any[] = [];
@@ -25,41 +24,49 @@ export class AddProductComponent {
   isLoading = false;
   color: ThemePalette = 'warn';
   value = 100;
-  fileSelected: File[] =[];
+  fileSelected: File[] = [];
   units: any[] = [
     { measure: 'Kilogram', value: 'kg' },
-    { measure: 'Gram', value: 'gm' }
+    { measure: 'Gram', value: 'gm' },
   ];
   labels: any[] = [];
   categories: any[] = [];
 
   labels2: any[] = [
     {
-        "name": "organic",
-        "imageUrl": "https://krishi-consumer-products.s3.amazonaws.com/labels/pureorganic.jpeg",
-        "info": "This is a label"
+      name: 'organic',
+      imageUrl:
+        'https://krishi-consumer-products.s3.amazonaws.com/labels/pureorganic.jpeg',
+      info: 'This is a label',
     },
     {
-        "name": "fresh",
-        "imageUrl": "https://krishi-consumer-products.s3.amazonaws.com/labels/fresh.jpeg",
-        "info": "This is a label"
+      name: 'fresh',
+      imageUrl:
+        'https://krishi-consumer-products.s3.amazonaws.com/labels/fresh.jpeg',
+      info: 'This is a label',
     },
     {
-        "name": "off5",
-        "imageUrl": "https://krishi-consumer-products.s3.amazonaws.com/labels/off5.jpeg",
-        "info": "This is a label"
+      name: 'off5',
+      imageUrl:
+        'https://krishi-consumer-products.s3.amazonaws.com/labels/off5.jpeg',
+      info: 'This is a label',
     },
     {
-        "name": "off10",
-        "imageUrl": "https://krishi-consumer-products.s3.amazonaws.com/labels/off10.jpeg",
-        "info": "This is a label"
-    }
-];
+      name: 'off10',
+      imageUrl:
+        'https://krishi-consumer-products.s3.amazonaws.com/labels/off10.jpeg',
+      info: 'This is a label',
+    },
+  ];
 
-
-  constructor(private fb: FormBuilder, public notifier: NotifierService,
-              public applicationService: ApplicationService, public router: Router,
-              public dialogRef: MatDialogRef<AddProductComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
+  constructor(
+    private fb: FormBuilder,
+    public notifier: NotifierService,
+    public applicationService: ApplicationService,
+    public router: Router,
+    public dialogRef: MatDialogRef<AddProductComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
     this.updateProductQuantity = this.fb.group({
       name: ['', Validators.required],
       category: ['', Validators.required],
@@ -90,13 +97,18 @@ export class AddProductComponent {
     this.isLoading = true;
     formData.expireDate = moment(formData.expireDate).format('YYYY-MM-DD');
 
-    const selectedLabelNames = this.updateProductQuantity.get('selectedLabels')?.value || [];
+    const selectedLabelNames =
+      this.updateProductQuantity.get('selectedLabels')?.value || [];
 
     // Filter and map the labels to get the required format
     const selectedLabelObjects = this.labels
-      .filter(label => selectedLabelNames.includes(label.name))
-      .map(label => ({ name: label.name, imageUrl: label.imageUrl , info:label.info})); // Send the desired structure
-  
+      .filter((label) => selectedLabelNames.includes(label.name))
+      .map((label) => ({
+        name: label.name,
+        imageUrl: label.imageUrl,
+        info: label.info,
+      })); // Send the desired structure
+
     console.log('Selected labels to send:', selectedLabelObjects);
 
     if (this.updateProductQuantity.valid) {
@@ -113,21 +125,24 @@ export class AddProductComponent {
         labels: selectedLabelObjects, // Send selected labels directly
         discount: formData.discount,
         expireDate: formData.expireDate,
-        margin: 20
+        margin: 20,
       };
       console.log('Form Data is', request);
-      this.applicationService.addProduct(request).subscribe((response: any) => {
-        this.isLoading = false;
-        if (response.status) {
-          this.notifier.notify('success', 'Product Updated Successfully');
-          this.close();
-        } else {
-          this.notifier.notify('error', response.message);
+      this.applicationService.addProduct(request).subscribe(
+        (response: any) => {
+          this.isLoading = false;
+          if (response.status) {
+            this.notifier.notify('success', 'Product Updated Successfully');
+            this.close();
+          } else {
+            this.notifier.notify('error', response.message);
+          }
+        },
+        (error) => {
+          this.isLoading = false;
+          this.notifier.notify('error', error.error.message[0]);
         }
-      }, (error) => {
-        this.isLoading = false;
-        this.notifier.notify('error', error.error.message[0]);
-      });
+      );
     } else {
       this.isLoading = false;
       this.notifier.notify('error', 'Please fill the form completely.');
@@ -162,7 +177,7 @@ export class AddProductComponent {
       this.images.push(this.fb.control(file));
     }
   }
-  selectedFileAdd(selectedFile: any){
+  selectedFileAdd(selectedFile: any) {
     const reader = new FileReader();
     reader.onload = (e: any) => {
       console.log('E', e);
